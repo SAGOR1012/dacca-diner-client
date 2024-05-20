@@ -13,16 +13,16 @@ import slide2 from "../../../assets/home/slide2.jpg";
 import slide3 from "../../../assets/home/slide3.jpg";
 import slide4 from "../../../assets/home/slide4.jpg";
 import slide5 from "../../../assets/home/slide5.jpg";
+import SectionTitle from '../../shared/SectionTitle/SectionTitle';
 
 const Category = () => {
     return (
-        <div>
-            {/*time and  ORDER ONLINE  */}
-            <div className='max-w-[424px] text-center mx-auto mb-12' >
-                <h5 className='text-[#D99904] mb-4'>---From 11:00am to 10:00pm---</h5>
-                <div className='border-y-slate-700 border-t-2 border-b-2 p-5 '>
-                    <h3 className='text-white'>ORDER ONLINE</h3>
-                </div>
+        <section>
+            {/* Section titile */}
+            <div className='mt-20 mb-12'>
+                <SectionTitle subHeading={'---From 11:00am to 10:00pm---'} heading={'ORDER ONLINE'}>
+
+                </SectionTitle>
             </div>
             <Swiper
                 slidesPerView={4}
@@ -40,10 +40,9 @@ const Category = () => {
                 <SwiperSlide><img src={slide3} /> <h3 className=' text-xl md:lg:text-3xl lg:text-4xl text-center -mt-12  lg:-mt-20 lg:pb-7 md:pb-7 text-white'>Soups</h3></SwiperSlide>
                 <SwiperSlide><img src={slide4} /> <h3 className=' text-xl md:lg:text-3xl lg:text-4xl text-center -mt-12  lg:-mt-20 lg:pb-7 md:pb-7 text-white'>Desserts</h3></SwiperSlide>
                 <SwiperSlide><img src={slide5} /> <h3 className=' text-xl md:lg:text-3xl lg:text-4xl text-center -mt-12  lg:-mt-20 lg:pb-7 md:pb-7 text-white'>Salads</h3></SwiperSlide>
-
-
             </Swiper>
-        </div>
+        </section>
+
     );
 };
 
