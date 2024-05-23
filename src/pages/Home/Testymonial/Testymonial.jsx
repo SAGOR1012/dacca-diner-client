@@ -14,14 +14,12 @@ import '@smastrom/react-rating/style.css'
 
 const Testymonial = () => {
 
-
-
     const [reviews, setReviews] = useState([])
 
-    fetch('reviews.json')
+    fetch('http://localhost:5000/reviews')
         .then(res => res.json())
         .then((data) => {
-            console.log(data);
+            // console.log(data);
             setReviews(data)
 
         })
@@ -48,7 +46,6 @@ const Testymonial = () => {
                                 readOnly
                             />
                             {/* rating end*/}
-
 
                             <p>{review.details}</p>
                             <h3 className="text-2xl text-[#D99904] md:text-3xl font-semibold">{review.name}</h3>

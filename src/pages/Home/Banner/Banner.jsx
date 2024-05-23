@@ -14,7 +14,7 @@ const Banner = () => {
     return (
         <div>
             <Carousel autoPlay='boolean'>
-                <div>
+                <div >
                     <img src={img1} />
                 </div>
                 <div>
