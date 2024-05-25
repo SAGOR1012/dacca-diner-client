@@ -8,7 +8,8 @@ const Main = () => {
     console.log(location);
 
     /* jodi location er path name er moddhe login thake tahole heder footer dekhate chai na . shei jonn ei condition likha hoiise */
-    const noHeaderFooter = location.pathname.includes('login')
+    const noHeaderFooterLoginPage = location.pathname.includes('login') || location.pathname.includes('signup')
+
 
     return (
 
@@ -18,7 +19,7 @@ const Main = () => {
             <Outlet></Outlet>
 
             {/* jodi login thake tahole footer show korbe na  */}
-            {noHeaderFooter || <Footer></Footer>}
+            {noHeaderFooterLoginPage || <Footer></Footer>}
 
 
         </div >

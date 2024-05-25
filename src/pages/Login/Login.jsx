@@ -1,15 +1,26 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import authImg from '../../assets/others/authentication2.png';
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
+import { AuthContext } from "../../provider/AuthProvider";
+import { Helmet } from "react-helmet-async";
+import Swal from "sweetalert2";
+import { CgLaptop } from "react-icons/cg";
 
 const Login = () => {
 
     const [showPassword, setShowPassword] = useState(false); // password show/ hide korar jonne state banano hoyche
     const [disabled, setDisabled] = useState(true); // login button disabled kore rakhar jonne use kora hoyche
 
-    const captchaRef = useRef(null); // captcha er jonne use kora hoyche
+    /* Auth provider theke distrture kore ana hoyeche  */
+    const { signInEmail, googleSignIn } = useContext(AuthContext);
+
+    /* location replace related function  */
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from?.pathname || '/';
+    console.log('state in the location login page', location.state);
 
     useEffect(() => {
         // 6 charectore er captcha
@@ -21,18 +32,64 @@ const Login = () => {
         const form = e.target;
         const email = form.email.value;
         const password = form.password.value;
+        // console.log(email, password);
 
-        console.log(email, password);
+        signInEmail(email, password)
+            .then((result) => {
+                const user = result.user;
+                console.log(user);
+                /* login alert */
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Login Successfully",
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+
+                /* login korar por automatic location a niye jabe */
+                navigate(from, { replace: true });
+            })
+            .catch((error) => {
+                console.log(error);
+
+            })
     };
+
+    /* google signIn */
+    const handleGoogleSingIn = () => {
+        googleSignIn()
+            .then((result) => {
+                console.log(result.user);
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Successfully Login",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                /* login korar por automatic location a niye jabe */
+                navigate(from, { replace: true });
+
+            })
+            .catch((error) => {
+                console.log(error);
+
+            })
+
+    }
+
 
     // password show/ hide korar jonne function banano hoyche
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
 
+    /* captcha function */
     const handleValidCaptcha = (e) => {
         e.preventDefault();
-        const user_captcha_value = captchaRef.current.value;
+        const user_captcha_value = e.target.value;
 
         if (validateCaptcha(user_captcha_value)) {
             setDisabled(false); // Captcha validated, enable the login button
@@ -44,14 +101,18 @@ const Login = () => {
 
     return (
         <div>
+            <Helmet>
+                <title> Dacca | Login</title>
+            </Helmet>
             <div className="min-h-screen bgImage1 text-gray-900 flex justify-center">
-                <div className="max-w-screen-xl m-0 sm:m-10 shadow-2xl sm:rounded-lg flex justify-center flex-1">
+                <div className="max-w-screen-xl m-0 sm:m-10 shadow-2xl sm:rounded-lg flex justify-center flex">
                     <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
                         <div className="mt-12 flex flex-col items-center">
                             <div className="w-full flex-1 mt-8">
                                 {/* google login */}
                                 <div className="flex flex-col items-center">
                                     <button
+                                        onClick={handleGoogleSingIn}
                                         className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-[#D1A054] text-white flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
                                         <div className="bg-white p-2 rounded-full">
                                             <svg className="w-4" viewBox="0 0 533.5 544.3">
@@ -70,7 +131,7 @@ const Login = () => {
                                             </svg>
                                         </div>
                                         <span className="ml-4">
-                                            Sign In with Google
+                                            Log In with Google
                                         </span>
                                     </button>
                                 </div>
@@ -120,13 +181,13 @@ const Login = () => {
 
                                         <div>
                                             <input
-                                                ref={captchaRef}
                                                 className="w-1/2 px-8 py-2 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                                                 name="captcha"
                                                 type="text"
                                                 placeholder="captcha"
+                                                onBlur={handleValidCaptcha}
                                             />
-                                            <button onClick={handleValidCaptcha} className="btn btn-outline btn-sm ml-2">Validate</button>
+
                                         </div>
                                     </div>
 
@@ -143,7 +204,7 @@ const Login = () => {
                                         </span>
                                     </button>
                                     <p className="mt-6 text-xs text-gray-600 text-center">
-                                        Don't have an account?
+                                        Do not have an account?
                                         <Link to='/signup' className="font-bold text-[#D1A054] ml-2">
                                             Sign up
                                         </Link>
