@@ -10,6 +10,7 @@ const useCart = () => {
         queryFn: async () => {
             /* axios use kore (const res) moddhe await use korte hobe jodi fatch use kortam tahole (const data ) variable banatam documentations er moto*/
             const res = await axiosSecure.get(`/carts?email=${user.email}`)
+            console.log(res.data);
             return res.data
 
         }

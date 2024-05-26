@@ -35,7 +35,7 @@ const Navbar = () => {
         {/* cart section for large screen */}
         {
             user ? <li>
-                <NavLink to='/myorder' className={({ isActive }) =>
+                <NavLink to='/dashboard/cart' className={({ isActive }) =>
                     isActive
                         ? "text-yellow-300   "
                         : ""
@@ -90,7 +90,7 @@ const Navbar = () => {
                         <>
                             {/* cart section  for mobile screen */}
                             <div className="md:hidden">
-                                <NavLink to='/myorder' className={({ isActive }) =>
+                                <NavLink to='/dashboard/cart' className={({ isActive }) =>
                                     isActive
                                         ? "text-yellow-300   "
                                         : ""

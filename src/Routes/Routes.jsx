@@ -10,12 +10,16 @@ import Login from "../pages/Login/Login";
 import SignUp from "../pages/SignUp/SignUp";
 import MyOrder from "../pages/MyOrder/MyOrder";
 import PrivetRoutes from "./PrivetRoutes";
+import Dashboard from "../Layout/Dashboard";
+import Cart from "../pages/Dashboard/Cart/Cart";
+import NotFound from "../pages/NotFound";
 
 
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <Main></Main>,
+        errorElement: <NotFound></NotFound>,
         children: [
             {
                 path: '/',
@@ -51,4 +55,15 @@ export const router = createBrowserRouter([
 
         ]
     },
+    {
+        path: 'dashboard',
+        element: <Dashboard></Dashboard>,
+        children: [
+            {
+                path: 'cart',
+                element: <PrivetRoutes> <Cart></Cart> </PrivetRoutes>
+            }
+        ]
+
+    }
 ]);
