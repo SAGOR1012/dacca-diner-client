@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { Helmet } from "react-helmet-async";
 import { AuthContext } from "../../provider/AuthProvider";
 import Swal from "sweetalert2";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
 
 
@@ -14,7 +15,7 @@ const SignUp = () => {
 
     const [showPassword, setShowPassword] = useState(false); // password show/ hide korar jonne state banano hoyche
     const { createUser } = useContext(AuthContext)
-
+    const axiosPublic = useAxiosPublic()
 
     /* location replace related function  */
     const navigate = useNavigate()
@@ -29,19 +30,36 @@ const SignUp = () => {
 
     /* Create account function  */
     const onSubmit = (data) => {
-        console.log(data)
+        // console.log(data)
+
+
         createUser(data.email, data.password)
             .then((result) => {
-                const loggedUser = result.user;
-                console.log(loggedUser);
-                /* signIn success alert */
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Registration Successfully",
-                    showConfirmButton: false,
-                    timer: 1000
-                });
+                // const loggedUser = result.user;
+                // console.log(loggedUser);
+
+                /* create user entry in database */
+                const userInfo = {
+                    name: data.name,
+                    email: data.email,
+                    // password: data.password
+                }
+                axiosPublic.post('/users', userInfo)
+                    .then((res) => {
+                        if (res.data.insertedId) {
+                            console.log('user add to database');
+                            /* signIn success alert */
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Registration Successfully",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+
+                    })
+
 
                 reset()  /* reset form data after signup */
 
@@ -102,7 +120,7 @@ const SignUp = () => {
                                         <input
                                             className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                                             name="password"
-                                            {...register("password", { required: true, minLength: 5, maxLength: 20 })}
+                                            {...register("password", { required: true, minLength: 6, maxLength: 20 })}
                                             type={showPassword ? 'text' : 'password'}
                                             placeholder="Password"
 
@@ -110,7 +128,7 @@ const SignUp = () => {
                                         {/* error msg */}
                                         {errors.password && errors.password.type === "minLength" && (
                                             <span className="text-red-500 text-xs">
-                                                Password must be at least 5 characters
+                                                Password must be at least 6  characters
                                             </span>
                                         )}
                                         <div

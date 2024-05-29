@@ -6,7 +6,7 @@ import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-s
 import { AuthContext } from "../../provider/AuthProvider";
 import { Helmet } from "react-helmet-async";
 import Swal from "sweetalert2";
-import { CgLaptop } from "react-icons/cg";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
 const Login = () => {
 
@@ -15,6 +15,7 @@ const Login = () => {
 
     /* Auth provider theke distrture kore ana hoyeche  */
     const { signInEmail, googleSignIn } = useContext(AuthContext);
+    const axiosPublic = useAxiosPublic();
 
     /* location replace related function  */
     const navigate = useNavigate()
@@ -24,9 +25,10 @@ const Login = () => {
 
     useEffect(() => {
         // 6 charectore er captcha
-        loadCaptchaEnginge(6);
+        loadCaptchaEnginge(4);
     }, []);
 
+    /* email and password login function */
     const handleLogin = (e) => {
         e.preventDefault();
         const form = e.target;
@@ -61,16 +63,28 @@ const Login = () => {
         googleSignIn()
             .then((result) => {
                 console.log(result.user);
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Successfully Login",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+                const userInfo = {
+                    email: result.user?.email,
+                    name: result.user?.displayName,
+                }
+                axiosPublic.post('/users', userInfo)
+                    .then((res) => {
+                        console.log(res.data);
 
-                /* login korar por automatic location a niye jabe */
-                navigate(from, { replace: true });
+                        /* success sign in alert */
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Successfully Login",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
+                        /* login korar por automatic location a niye jabe */
+                        navigate(from, { replace: true });
+                    })
+
+
 
             })
             .catch((error) => {
@@ -105,7 +119,7 @@ const Login = () => {
                 <title> Dacca | Login</title>
             </Helmet>
             <div className="min-h-screen bgImage1 text-gray-900 flex justify-center">
-                <div className="max-w-screen-xl m-0 sm:m-10 shadow-2xl sm:rounded-lg flex justify-center flex">
+                <div className="max-w-screen-xl m-0 sm:m-10 shadow-2xl sm:rounded-lg flex justify-center ">
                     <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
                         <div className="mt-12 flex flex-col items-center">
                             <div className="w-full flex-1 mt-8">
